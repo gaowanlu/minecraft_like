@@ -16,11 +16,11 @@ class Network {
         this.client = new net.Socket();
 
         this.client.on('connect', () => {
-            Log.DEBUG(`Connected to server ${this.host}:${this.port}`);
+            Log.ERROR(`Connected to server ${this.host}:${this.port}`);
         });
 
         this.client.on('data', (data) => {
-            Log.DEBUG(`Received data from server: ${data}`);
+            Log.ERROR(`Received data from server: ${data}`);
         })
 
         this.client.on('error', (error) => {
@@ -32,7 +32,7 @@ class Network {
         });
 
         this.client.on('close', () => {
-            Log.DEBUG(`Connection closed with server ${this.host}:${this.port}`)
+            Log.ERROR(`Connection closed with server ${this.host}:${this.port}`)
             this.Close();
             setTimeout(() => {
                 this.Connect();
