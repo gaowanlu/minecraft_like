@@ -1,16 +1,19 @@
 const Player = require("../entity/Player");
+const Log = require("../base/Log");
+const MapSystem = require("./MapSystem");
+const ControlSystem = require("./ControlSystem");
 
 class PlayerSystem {
     constructor() {
         this.player = null;
     }
     Init(camera) {
-        console.log("PlayerSystem.Init()");
+        Log.DEBUG("PlayerSystem.Init()");
         this.player = new Player(8, 3.5, 8, camera);
     }
 
     OnGameStart() {
-        console.log("PlayerSystem.OnGameStart()");
+        Log.DEBUG("PlayerSystem.OnGameStart()");
 
         // 游戏开始时设置位置玩家参数
         this.player.SetPosition(8, 3.5, 8);
@@ -35,17 +38,23 @@ class PlayerSystem {
         return this.player.positionCmpt.GetThreePosition().z;
     }
 
+    UpdateRotation(event, debugCallbackFunc) {
+        this.player.UpdateRotation(event, debugCallbackFunc);
+    }
+
     OnGameExit() {
-        console.log("PlayerSystem.OnGameExit()");
+        Log.DEBUG("PlayerSystem.OnGameExit()");
 
         this.player.SetPosition(8, 3.5, 8);
         this.player.SetVelocity(0, 0, 0);
     }
 
     OnMainLoop() {
-        console.log("PlayerSystem.OnMainLoop()");
+        // Log.DEBUG("PlayerSystem.OnMainLoop()");
 
-        // this.player.Update(this.map, this.control.keys, this.debug.bind(this));
+        this.player.Update(MapSystem.GetMap(), ControlSystem.GetKeys(), (msg) => {
+            Log.DEBUG(msg);
+        });
     }
 };
 

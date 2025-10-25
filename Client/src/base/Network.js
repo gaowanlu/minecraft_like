@@ -1,4 +1,5 @@
 const net = require('net');
+const Log = require("./Log");
 
 class Network {
     constructor(host, port) {
@@ -15,11 +16,11 @@ class Network {
         this.client = new net.Socket();
 
         this.client.on('connect', () => {
-            console.log(`Connected to server ${this.host}:${this.port}`);
+            Log.DEBUG(`Connected to server ${this.host}:${this.port}`);
         });
 
         this.client.on('data', (data) => {
-            console.log(`Received data from server: ${data}`);
+            Log.DEBUG(`Received data from server: ${data}`);
         })
 
         this.client.on('error', (error) => {
@@ -31,7 +32,7 @@ class Network {
         });
 
         this.client.on('close', () => {
-            console.log(`Connection closed with server ${this.host}:${this.port}`)
+            Log.DEBUG(`Connection closed with server ${this.host}:${this.port}`)
             this.Close();
             setTimeout(() => {
                 this.Connect();

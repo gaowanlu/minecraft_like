@@ -3,6 +3,7 @@ const Block = require("./Block");
 const PositionCmpt = require("../component/PositionCmpt");
 const AssetSystemInstance = require("../system/AssetSystem");
 const Macro = require("../base/Macro");
+const Log = require("../base/Log");
 
 class Map extends Entity {
     constructor(size) {
@@ -22,7 +23,7 @@ class Map extends Entity {
     }
 
     GetBlockKey(x, y, z) {
-        return `${z},${y},${z}`;
+        return `${x},${y},${z}`;
     }
 
     // 加入新的块到地图
@@ -36,10 +37,23 @@ class Map extends Entity {
         this.blocks[key].SddToScene(this.threeScene);
     }
 
+    AddNewBlock(x, y, z, blockType, material) {
+        let newBlock = new Block(x,
+            y,
+            z,
+            blockType,
+            material);
+        this.SetBlock(newBlock);
+    }
+
     // 获取地图中的某个Block
     GetBlock(x, y, z) {
         const key = this.GetBlockKey(x, y, z);
         return this.blocks[key] || null;
+    }
+
+    GetBlocks() {
+        return this.blocks;
     }
 
     // 从地图中删除某个块
@@ -56,7 +70,7 @@ class Map extends Entity {
 
     // 初始化基础地面
     InitTerrain() {
-        console.log("Map.InitTerrain()");
+        Log.DEBUG("Map.InitTerrain()");
         for (let x = 0; x < this.size; ++x) {
             for (let z = 0; z < this.size; ++z) {
                 let newTerrainBlock = new Block(x,

@@ -1,6 +1,7 @@
 const Macro = require("../base/Macro");
 const THREE = require('three');
 const GameSystem = require("./GameSystem");
+const Log = require("../base/Log");
 
 class AssetSystem {
     constructor() {
@@ -26,7 +27,7 @@ class AssetSystem {
             ];
 
             const onLoad = (textureName, texture) => {
-                console.log(`${textureName} texture loaded`);
+                Log.DEBUG(`${textureName} texture loaded`);
                 loadedCount++;
                 if (loadedCount === resources.length) {
                     this.texturesLoaded = true;
@@ -37,7 +38,7 @@ class AssetSystem {
             };
 
             const onError = (textureName, error) => {
-                console.log(`Error loading ${textureName} texture: ${err.message}`);
+                Log.DEBUG(`Error loading ${textureName} texture: ${err.message}`);
                 reject(err);
             };
 

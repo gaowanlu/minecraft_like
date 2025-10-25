@@ -2,6 +2,7 @@ const Map = require("../entity/Map");
 const { Sky } = require('three/examples/jsm/objects/Sky.js');
 const GameSystem = require("./GameSystem");
 const THREE = require('three');
+const Log = require("../base/Log");
 
 class MapSystem {
     constructor() {
@@ -13,7 +14,7 @@ class MapSystem {
     }
 
     Init() {
-        console.log("MapSystem.Init()");
+        Log.DEBUG("MapSystem.Init()");
         this.map = new Map(16);
 
         // 初始化渲染器
@@ -57,7 +58,7 @@ class MapSystem {
             this.scene.add(directionalLight);
             this.pointLight = new THREE.PointLight(0xffffff, 0.3, 10);
             this.scene.add(this.pointLight);
-            console.log('Lighting and sky initialized: Ambient(0x606060), Directional(0xffffff, 0.8), Point(0xffffff, 0.3), Sky(deep blue)');
+            Log.DEBUG('Lighting and sky initialized: Ambient(0x606060), Directional(0xffffff, 0.8), Point(0xffffff, 0.3), Sky(deep blue)');
         }
 
         // 将场景绑定到地图对象
@@ -70,25 +71,26 @@ class MapSystem {
 
     // OnGameStart
     OnGameStart() {
-        console.log("MapSystem.OnGameStart()");
+        Log.DEBUG("MapSystem.OnGameStart()");
         this.map.InitTerrain();
+        this.renderer.domElement.style.display = 'block';
     }
 
     OnGameExit() {
-        console.log("MapSystem.OnGameExit()");
-
+        Log.DEBUG("MapSystem.OnGameExit()");
         this.map.ClearAllBlocks();
+        this.renderer.domElement.style.display = 'none';
     }
 
     OnMainLoop(playerPosition) {
-        console.log("MapSystem.OnMainLoop playerPosition:", playerPosition);
+        // Log.DEBUG("MapSystem.OnMainLoop playerPosition:", playerPosition);
 
         this.pointLight.position.set(playerPosition.x, playerPosition.y + 0.5, playerPosition.z);
 
         try {
             this.renderer.render(this.scene, this.camera);
         } catch (err) {
-            console.log(`Render error: ${err.message}`);
+            Log.DEBUG(`Render error: ${err.message}`);
             console.error('Render error details:', err);
         }
     }
@@ -105,8 +107,12 @@ class MapSystem {
         return this.map.size;
     }
 
+    GetRenderer() {
+        return this.renderer;
+    }
+
     SetPointLightPosition(x, y, z) {
-        console.log(`MapSystem.SetPointLightPosition(${x}, ${y}, ${z})`);
+        Log.DEBUG(`MapSystem.SetPointLightPosition(${x}, ${y}, ${z})`);
         this.pointLight.position.set(x, y, z);
     }
 

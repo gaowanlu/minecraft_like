@@ -1,4 +1,5 @@
 const THREE = require('three');
+const Log = require("../base/Log");
 
 class UISystem {
     constructor() {
@@ -6,18 +7,18 @@ class UISystem {
         this.inGameUI = document.getElementById('freeland-in-game-ui');
         // this.debugText = document.getElementById('freeland-debug-text');
         // this.debugPanel = document.getElementById('freeland-debug-panel');
-        // this.crosshair = document.getElementById('freeland-crosshair');
+        this.crosshair = document.getElementById('freeland-crosshair');
         this.startButton = document.getElementById('freeland-start-button');
         this.exitButton = document.getElementById('freeland-exit-button');
-        // this.playBlockTypeSelect = document.getElementById('freeland-block-type-select');
+        this.playBlockTypeSelect = document.getElementById('freeland-block-type-select');
         // this.debugMessages = [];
     }
 
     Init(OnGameStartCallback, OnGameExitCallback, OnWindowResize) {
-        console.log("UISystem.Init()");
+        Log.DEBUG("UISystem.Init()");
         // 开始游戏按钮
         let OnStartButtonClick = () => {
-            console.log("开始游戏按钮被点击");
+            Log.DEBUG("开始游戏按钮被点击");
             this.OnGameStart();
             OnGameStartCallback();
         };
@@ -25,7 +26,7 @@ class UISystem {
 
         // 离开游戏按钮
         let OnExitButtonClick = () => {
-            console.log("离开游戏按钮被点击");
+            Log.DEBUG("离开游戏按钮被点击");
             this.OnGameExit();
             OnGameExitCallback();
         };
@@ -33,27 +34,26 @@ class UISystem {
 
         // 注册窗口大小改变事件
         window.addEventListener('resize', () => {
-            console.log(`窗口大小改变了 window.innerWidth ${window.innerWidth} window.innerHeight ${window.innerHeight}`);
+            Log.DEBUG(`窗口大小改变了 window.innerWidth ${window.innerWidth} window.innerHeight ${window.innerHeight}`);
 
             OnWindowResize();
         });
     }
 
-    // BindPlayBlockTypeSelectChange(playBlockTypeCallbackFunc) {
-    //     // this.playBlockTypeSelect.addEventListener('change', (e) => playBlockTypeCallbackFunc(e.target.value));
-    // }
+    BindPlayBlockTypeSelectChange(playBlockTypeCallbackFunc) {
+        this.playBlockTypeSelect.addEventListener('change', (e) => playBlockTypeCallbackFunc(e.target.value));
+    }
 
     ShowStartScreen() {
         this.startScreen.style.display = 'flex';
-        // this.Game.renderer.domElement.style.display = 'none';
-        // this.crosshair.style.display = 'none';
+        this.crosshair.style.display = 'none';
         // this.debugText.style.display = 'none';
         // this.debugPanel.style.display = 'none';
         this.inGameUI.style.display = 'none';
     }
 
     OnGameStart() {
-        console.log("UI.System OnGameStart()");
+        Log.DEBUG("UI.System OnGameStart()");
         this.ShowInGameUI();
     }
 
@@ -63,15 +63,14 @@ class UISystem {
 
     ShowInGameUI() {
         this.startScreen.style.display = 'none';
-        // this.Game.renderer.domElement.style.display = 'block';
-        // this.crosshair.style.display = 'block';
+        this.crosshair.style.display = 'block';
         // this.debugText.style.display = 'block';
         // this.debugPanel.style.display = 'block';
         this.inGameUI.style.display = 'block';
     }
 
     SetDebugText(text) {
-        console.log(`UISystem setDebugText: ${text}`);
+        Log.DEBUG(`UISystem setDebugText: ${text}`);
         // this.debugText.textContent = text;
     }
 
@@ -99,7 +98,7 @@ class UISystem {
     }
 
     OnMainLoop() {
-        console.log("UISystem.OnMainLoop()");
+        // Log.DEBUG("UISystem.OnMainLoop()");
     }
 
 };

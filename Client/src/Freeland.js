@@ -1,15 +1,20 @@
 const GameSystemInstance = require("./system/GameSystem");
+const BaseConfig = require("./config/BaseConfig");
+const Log = require("./base/Log");
 
 const Freeland = {
-    version: 'v0.0.1'
 };
 
+Freeland.Version = () => {
+    return BaseConfig.VERSION;
+}
+
 Freeland.ConsoleVersion = function () {
-    console.log(`Freeland Version: ${this.version}`);
+    Log.DEBUG(`Freeland Version: ${this.Version()}`);
 }
 
 Freeland.OnDOMContentLoaded = function () {
-    // console.log("DOMContentLoaded");
+    // Log.DEBUG("DOMContentLoaded");
     this.ConsoleVersion();
 
     // 游戏系统实例初始化

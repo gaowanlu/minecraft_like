@@ -128,7 +128,7 @@ class Npc extends Entity {
             this.group.position.set(position.x, 1, position.z);
 
             // 输出调试信息：记录 NPC 移动到的位置，保留两位小数
-            debugCallback(`NPC moved to: x=${position.x.toFixed(2)}, y=1, z=${position.z.toFixed(2)}`);
+            // debugCallback(`NPC moved to: x=${position.x.toFixed(2)}, y=1, z=${position.z.toFixed(2)}`);
         }
     }
 };

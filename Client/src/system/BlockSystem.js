@@ -1,21 +1,23 @@
+const Log = require("../base/Log");
+
 class BlockSystem {
     constructor() {
     }
 
     Init() {
-        console.log("BlockSystem.Init()");
+        Log.DEBUG("BlockSystem.Init()");
     }
 
     OnGameStart() {
-        console.log("BlockSystem.OnGameStart()");
+        Log.DEBUG("BlockSystem.OnGameStart()");
     }
 
     OnGameExit() {
-        console.log("BlockSystem.OnGameExit()");
+        Log.DEBUG("BlockSystem.OnGameExit()");
     }
 
     OnMainLoop() {
-        console.log("BlockSystem.OnMainLoop()");
+        // Log.DEBUG("BlockSystem.OnMainLoop()");
     }
 };
 

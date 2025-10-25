@@ -2,17 +2,18 @@ const Npc = require("../entity/Npc");
 const MapSystem = require("./MapSystem");
 const AssetSystem = require("./AssetSystem");
 const Macro = require("../base/Macro");
+const Log = require("../base/Log");
 
 class NpcSystem {
     constructor() {
         this.npcs = [];
     }
     Init() {
-        console.log("NpcSystem.Init()");
+        Log.DEBUG("NpcSystem.Init()");
     }
 
     OnGameStart() {
-        console.log("NpcSystem.OnGameStart()");
+        Log.DEBUG("NpcSystem.OnGameStart()");
         this.npcs.length = 0;
         for (let i = 0; i < 3; i++) {
             const x = Math.floor(Math.random() * (MapSystem.GetMapSize() - 2)) + 1;
@@ -24,24 +25,24 @@ class NpcSystem {
                 AssetSystem.GetMaterial(Macro.MaterialNameMacro.NPC));
             this.npcs.push(npc);
 
-            console.log(`NPC ${this.npcs.length - 1} created at: x=${x}, y=1, z=${z}`);
+            Log.DEBUG(`NPC ${this.npcs.length - 1} created at: x=${x}, y=1, z=${z}`);
         }
     }
 
     OnGameExit() {
-        console.log("NpcSystem.OnGameExit()");
+        Log.DEBUG("NpcSystem.OnGameExit()");
 
         this.npcs.forEach(npc => npc.Remove(MapSystem.GetScene()));
         this.npcs.length = 0;
     }
 
     OnMainLoop() {
-        console.log("NpcSystem.OnMainLoop()");
+        // Log.DEBUG("NpcSystem.OnMainLoop()");
 
         this.npcs.forEach((npc, index) => {
             npc.Update(MapSystem.GetMap(),
                 MapSystem.GetMapSize(),
-                (msg) => { console.log(`NPC ${index}: ${msg}`) });
+                (msg) => { Log.DEBUG(`NPC ${index}: ${msg}`) });
         });
     }
 };

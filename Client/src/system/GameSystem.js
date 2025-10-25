@@ -1,4 +1,4 @@
-const THREE = require("three");
+const Log = require("../base/Log");
 
 const UISystem = require("./UISystem");
 const PlayerSystem = require("./PlayerSystem");
@@ -9,11 +9,10 @@ const NpcSystem = require("./NpcSystem");
 const BlockSystem = require("./BlockSystem");
 const Network = require("../base/Network");
 const BaseConfig = require("../config/BaseConfig");
+const GameStatus = require("../base/GameStatus");
 
 class GameSystem {
     constructor() {
-        // 是否在运行中标记
-        this.isRunning = false;
         // 帧ID
         this.animationFrameId = null;
         // 记录上一帧时间
@@ -27,14 +26,20 @@ class GameSystem {
         // 网络初始化
         this.network.Connect();
         // UI初始化
-        UISystem.Init(() => {
-            this.OnStart();
-        }, () => {
-            this.OnExit();
-        }, () => {
-            this.OnWindowResize();
-        });
-        UISystem.ShowStartScreen();
+        {
+            UISystem.Init(() => {
+                this.OnStart();
+            }, () => {
+                this.OnExit();
+            }, () => {
+                this.OnWindowResize();
+            });
+            UISystem.ShowStartScreen();
+            UISystem.BindPlayBlockTypeSelectChange((blockTypeVal) => {
+                Log.ERROR(`blockTypeVal `, blockTypeVal);
+                ControlSystem.SetBlockType(blockTypeVal);
+            });
+        }
 
         // 地图场景系统初始化
         MapSystem.Init();
@@ -54,16 +59,16 @@ class GameSystem {
         });
 
         // 控制系统初始化
-        ControlSystem.Init();
-    }
-
-    SetIsRunning(val) {
-        this.isRunning = val;
+        ControlSystem.Init(e => {
+            PlayerSystem.UpdateRotation(e, (msg) => {
+                Log.DEBUG(msg);
+            });
+        });
     }
 
     // 玩家点击UI 开始按钮
     async OnStart() {
-        console.log("游戏开始");
+        Log.DEBUG("游戏开始");
         // 保证资源加载完毕
         if (!AssetSystem.IsLoadedOK()) {
             console.error("资源暂未加载完毕");
@@ -71,7 +76,7 @@ class GameSystem {
         }
 
         // 开始MainLoop运行
-        this.SetIsRunning(true);
+        GameStatus.SetIsRunning(true);
 
         // 地图系统开始游戏
         MapSystem.OnGameStart();
@@ -100,14 +105,14 @@ class GameSystem {
 
     // 玩家点UI 结束退出按钮回调
     async OnExit() {
-        console.log('Game OnExit');
+        Log.DEBUG('Game OnExit');
 
         if (this.animationFrameId) {
-            console.log("GameSystem.OnExit cancelAnimationFrame", this.animationFrameId);
+            Log.DEBUG("GameSystem.OnExit cancelAnimationFrame", this.animationFrameId);
             cancelAnimationFrame(this.animationFrameId);
             this.animationFrameId = null;
         }
-        this.SetIsRunning(false);
+        GameStatus.SetIsRunning(false);
 
         MapSystem.OnGameExit();
         BlockSystem.OnGameExit();
@@ -121,8 +126,7 @@ class GameSystem {
     }
 
     async MainLoop() {
-        if (!this.isRunning) {
-            console.log("!this.isRunning");
+        if (!GameStatus.GetIsRunning()) {
             return;
         }
 
@@ -141,7 +145,7 @@ class GameSystem {
         ControlSystem.OnMainLoop();
 
         // 调试帧率
-        console.log(`Frame time: ${(deltaTime * 1000).toFixed(2)}ms, FPS: ${(1 / deltaTime).toFixed(1)}`);
+        // Log.DEBUG(`Frame time: ${(deltaTime * 1000).toFixed(2)}ms, FPS: ${(1 / deltaTime).toFixed(1)}`);
     }
 };
 

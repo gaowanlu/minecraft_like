@@ -2,7 +2,8 @@
   "name": "freeland",
   "main": "main.js",
   "window": {
-    "toolbar": true
+    "toolbar": false,
+    "icon": "assets/mfavant_logo.png"
   },
   "dependencies": {
     "three": "^0.178.0"
